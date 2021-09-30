@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <link rel="stylesheet" href="./style.css">
+    <title>Document</title>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body>
+    <div class="container is-widescreen" x-data="component()">
+        <h1 class="title has-text-centered mt-5">Note Taker</h1>
+        <h2 class="title has-text-centered has-text-primary">Add A New Note:</h2>
+        <div class="is-flex is-flex-direction-row">
+            <label for="note" class="is-size-5 mr-5">Note:</label>
+            <textarea x-model="note" class="textarea is-link" placeholder="Please add some note here."
+                @keyup.enter="addNote()"></textarea>
+        </div>
+        <div class="has-text-centered">
+            <button class="button is-primary mt-5 mb-5" @click="addNote()">Add Note</button>
+        </div>
+        <template x-if="notesArray.length == 0">
+            <p class="mt-5 ml-6">No notes added yet!</p>
+        </template>
+        <div class="container-size">
+            <div class="grid-container">
+                <template x-for="note in notesArray" :key="note.id">
+                    <div class="grid-item">
+                        <div class="card m-3">
+                            <div class="card-content pt-3 ">
+                                <span @click="deleteNote(note.id)"><i class="fas fa-times"></i></span>
+                                <p>Note<span x-text="note.id"></span>:</p>
+                                <div class="content" style="height: 100px;">
+                                    <span class="size" x-text="note.note"></span>
+                                </div>
+                                <button class="button is-warning is-small mt-2" @click="openModal(note.id)">View
+                                    Detail</button>
+                                <button class="modal-close is-large" aria-label="close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <!-- This must be outside of the loop -->
+        <div x-show="showModal" class="modal is-active">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <div class="modal-card-body">
+                    <div class="has-text-right" @click="closeModal()"><i class="fas fa-times"></i>
+                    </div>
+                    <span x-text="showNote"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script>
+    function component() {
+        const a = {
+            note: 'Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.',
+            notesArray: JSON.parse(localStorage.getItem('notes') || '[]'),
+            count: 1,
+            showModal: false,
+            showNote: '',
+            addNote() {
+                if (!this.note) {
+                    alert('Please add some note.');
+                    return;
+                }
+                var notesOb = {};
+                notesOb.id = this.count++;
+                notesOb.note = this.note;
+                this.notesArray.push(notesOb);
+                this.note = null;
+                this.setLocalStorage();
+            },
+            deleteNote(id) {
+                const remainArray = this.notesArray.filter(e => e.id != id);
+                this.notesArray = remainArray;
+                this.setLocalStorage();
+            },
+            openModal(id) {
+                this.showModal = true;
+                let n = this.notesArray.filter(e => e.id == id);
+                this.showNote = n[0].note;
+            },
+            closeModal() {
+                this.showModal = false;
+            },
+            setLocalStorage() {
+                // store the data into localStorage(key, value)
+                window.localStorage.setItem('notes', JSON.stringify(this.notesArray));
+            },
+            getLocalStorage() {
+                // get values from localStorage
+                this.notesArray = JSON.parse(window.localStorage.getItem('notes'));
+            }
+        }
+        return a;
+    }
+</script>

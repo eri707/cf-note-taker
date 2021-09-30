@@ -1,0 +1,14 @@
+.grid-container {
+    display: grid;
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+.content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}  
+.container-size {
+  margin-left: 8rem;
+}
