@@ -8,7 +8,11 @@
 .content {
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-all;
 }  
 .container-size {
   margin-left: 8rem;
+}
+.modal-card, header button {
+  justify-items: right;
 }

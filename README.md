@@ -1,5 +1,5 @@
 # cf-note-taker
-This project is meant to note taker. Users can input data and store it into localStorage. 
+This project is meant to store notes. Notes are persisted between sessions. 
 
 # Motivation
 The purpose of this project is to build self-confidence.
@@ -15,8 +15,8 @@ Project is created with:
 * LocalStorage
 
 ### Features
-* Input note, then click the Add Note button or press Enter. You will see the box daialog of notes below.
-* The dialog box will be shown when clicking View Detail button.
-* The data will be still kept in the localstorage when closing the app.
+* Input note, then click the Add Note button or press Enter. The note will appear in a box below.
+* The complete message will be shown when clicking View Detail button.
+* The data will be still kept in localStorage when closing the app.
 
 

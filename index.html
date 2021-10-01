@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
     <link rel="stylesheet" href="./style.css">
-    <title>Document</title>
+    <title>Note Taker</title>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
@@ -17,9 +16,13 @@
     <div class="container is-widescreen" x-data="component()">
         <h1 class="title has-text-centered mt-5">Note Taker</h1>
         <h2 class="title has-text-centered has-text-primary">Add A New Note:</h2>
+        <div class="is-flex is-flex-direction-row mb-5 ml-2 mt-6" style="width: 40rem;">
+            <label for="title" class="is-size-5 mr-5">Title:</label>
+            <input x-model="title" class="input is-focused" type="text" placeholder="Title..."></input>
+        </div>
         <div class="is-flex is-flex-direction-row">
             <label for="note" class="is-size-5 mr-5">Note:</label>
-            <textarea x-model="note" class="textarea is-link" placeholder="Please add some note here."
+            <textarea x-model="note" class="textarea is-link is-focused" placeholder="Please add some note here."
                 @keyup.enter="addNote()"></textarea>
         </div>
         <div class="has-text-centered">
@@ -34,14 +37,17 @@
                     <div class="grid-item">
                         <div class="card m-3">
                             <div class="card-content pt-3 ">
-                                <span @click="deleteNote(note.id)"><i class="fas fa-times"></i></span>
-                                <p>Note<span x-text="note.id"></span>:</p>
+                                <span @click="deleteNote(note.id)" style="cursor:pointer"><i
+                                        class="fas fa-times"></i></span>
+                                <p class="is-underlined has-text-weight-bold">Title: <span x-text="note.title"></span>
+                                </p>
                                 <div class="content" style="height: 100px;">
-                                    <span class="size" x-text="note.note"></span>
+                                    <span class="size" x-text="note.note.slice(0,128)"></span>
+                                    <span x-show="note?.note?.length > 128">...</span>
                                 </div>
                                 <button class="button is-warning is-small mt-2" @click="openModal(note.id)">View
                                     Detail</button>
-                                <button class="modal-close is-large" aria-label="close"></button>
+
                             </div>
                         </div>
                     </div>
@@ -49,38 +55,63 @@
             </div>
         </div>
         <!-- This must be outside of the loop -->
+        <!-- <div x-show="showModal" class="modal is-active">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <div class="modal-card-body mb-5">
+                    <div class="has-text-right" @click="closeModal()"><i class="fas fa-times"></i>
+                    </div>
+                    <p class="is-underlined has-text-weight-bold">Title: <span x-text="showTitle"></span></p>
+                    <p x-text="showNote" class="mb-5"></p>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+        </div> -->
         <div x-show="showModal" class="modal is-active">
             <div class="modal-background"></div>
             <div class="modal-card">
-                <div class="modal-card-body">
-                    <div class="has-text-right" @click="closeModal()"><i class="fas fa-times"></i>
-                    </div>
-                    <span x-text="showNote"></span>
-                </div>
+                    <header class="modal-card-head is-justify-content-space-between">
+                        <p class="is-underlined has-text-weight-bold">Title: <span x-text="showTitle"></span></p>
+                        <button class="delete" aria-label="close" @click="closeModal()"></button>
+                    </header>
+                <section class="modal-card-body">
+                    <p x-text="showNote"></p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" @click="closeModal()">Close</button>
+                </footer>
             </div>
         </div>
     </div>
-
 </body>
 
 </html>
 <script>
     function component() {
         const a = {
-            note: 'Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.',
+            note: '',
+            title: '',
             notesArray: JSON.parse(localStorage.getItem('notes') || '[]'),
-            count: 1,
             showModal: false,
             showNote: '',
+            showTitle: '',
             addNote() {
-                if (!this.note) {
-                    alert('Please add some note.');
+                if (!this.title) {
+                    console.log(this.title);
+                    alert('Please add a title.');
+                    return;
+                }
+                if (this.note === '' || this.note === null) {
+                    console.log(this.note);
+                    alert('Please add a note.');
                     return;
                 }
                 var notesOb = {};
-                notesOb.id = this.count++;
+                notesOb.id = Math.floor(Math.random() * 1000);
+                notesOb.title = this.title;
                 notesOb.note = this.note;
                 this.notesArray.push(notesOb);
+                this.title = null;
                 this.note = null;
                 this.setLocalStorage();
             },
@@ -93,6 +124,7 @@
                 this.showModal = true;
                 let n = this.notesArray.filter(e => e.id == id);
                 this.showNote = n[0].note;
+                this.showTitle = n[0].title;
             },
             closeModal() {
                 this.showModal = false;
