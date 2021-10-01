@@ -47,7 +47,6 @@
                                 </div>
                                 <button class="button is-warning is-small mt-2" @click="openModal(note.id)">View
                                     Detail</button>
-
                             </div>
                         </div>
                     </div>
@@ -55,25 +54,13 @@
             </div>
         </div>
         <!-- This must be outside of the loop -->
-        <!-- <div x-show="showModal" class="modal is-active">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <div class="modal-card-body mb-5">
-                    <div class="has-text-right" @click="closeModal()"><i class="fas fa-times"></i>
-                    </div>
-                    <p class="is-underlined has-text-weight-bold">Title: <span x-text="showTitle"></span></p>
-                    <p x-text="showNote" class="mb-5"></p>
-                </div>
-                <button class="modal-close is-large" aria-label="close"></button>
-            </div>
-        </div> -->
         <div x-show="showModal" class="modal is-active">
             <div class="modal-background"></div>
             <div class="modal-card">
-                    <header class="modal-card-head is-justify-content-space-between">
-                        <p class="is-underlined has-text-weight-bold">Title: <span x-text="showTitle"></span></p>
-                        <button class="delete" aria-label="close" @click="closeModal()"></button>
-                    </header>
+                <header class="modal-card-head is-justify-content-space-between">
+                    <p class="is-underlined has-text-weight-bold">Title: <span x-text="showTitle"></span></p>
+                    <button class="delete" aria-label="close" @click="closeModal()"></button>
+                </header>
                 <section class="modal-card-body">
                     <p x-text="showNote"></p>
                 </section>
