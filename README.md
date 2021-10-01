@@ -6,7 +6,7 @@ The purpose of this project is to build self-confidence.
 
 # Table of Contents
 ### General Info 
-The code for this project is available for your perusal here. The project itself is hosted on GitHub Pages at https://eri707.github.io/cf-expense-tracker/.
+The code for this project is available for your perusal here. The project itself is hosted on GitHub Pages at https://eri707.github.io/cf-note-taker/.
 
 ### Technologies
 Project is created with:
